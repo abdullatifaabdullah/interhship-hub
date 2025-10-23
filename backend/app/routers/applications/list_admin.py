@@ -1,0 +1,1 @@
+# GET /applications/for-admin
