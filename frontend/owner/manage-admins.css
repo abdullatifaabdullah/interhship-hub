@@ -1,0 +1,247 @@
+/* Owner Manage Admins Page Styles */
+
+.manage-admins-container {
+    @apply space-y-6;
+}
+
+.admin-card {
+    @apply bg-white dark:bg-dark-surface rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow;
+}
+
+.admin-header {
+    @apply flex items-center justify-between mb-4;
+}
+
+.admin-name {
+    @apply text-lg font-semibold text-gray-900 dark:text-dark-text;
+}
+
+.admin-email {
+    @apply text-sm text-primary font-medium mb-2;
+}
+
+.admin-details {
+    @apply flex items-center space-x-6 text-sm text-gray-500 dark:text-dark-secondary mb-3;
+}
+
+.admin-meta {
+    @apply flex items-center justify-between text-xs text-gray-400 dark:text-gray-500;
+}
+
+.status-badge {
+    @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.status-pending {
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
+}
+
+.status-active {
+    @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+}
+
+.status-suspended {
+    @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
+}
+
+.status-rejected {
+    @apply bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200;
+}
+
+.action-buttons {
+    @apply flex items-center space-x-2;
+}
+
+.action-button {
+    @apply px-3 py-1 text-sm font-medium rounded-md transition-colors;
+}
+
+.action-button.approve {
+    @apply bg-green-600 hover:bg-green-700 text-white;
+}
+
+.action-button.suspend {
+    @apply bg-red-600 hover:bg-red-700 text-white;
+}
+
+.action-button.reject {
+    @apply bg-gray-600 hover:bg-gray-700 text-white;
+}
+
+.action-button.edit {
+    @apply bg-blue-600 hover:bg-blue-700 text-white;
+}
+
+.filter-section {
+    @apply bg-white dark:bg-dark-surface rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6;
+}
+
+.filter-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+}
+
+.filter-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-dark-text mb-2;
+}
+
+.filter-input {
+    @apply block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-dark-surface text-gray-900 dark:text-dark-text placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm;
+}
+
+.filter-select {
+    @apply block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-surface text-gray-900 dark:text-dark-text rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm;
+}
+
+.results-header {
+    @apply flex items-center justify-between mb-4;
+}
+
+.results-count {
+    @apply text-sm text-gray-500 dark:text-dark-secondary;
+}
+
+.view-toggle {
+    @apply flex items-center space-x-2;
+}
+
+.view-button {
+    @apply p-2 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors;
+}
+
+.view-button.active {
+    @apply text-primary bg-primary bg-opacity-10;
+}
+
+.empty-state {
+    @apply text-center py-12;
+}
+
+.empty-state-icon {
+    @apply text-gray-400 text-4xl mb-4;
+}
+
+.empty-state-title {
+    @apply text-lg font-medium text-gray-900 dark:text-dark-text mb-2;
+}
+
+.empty-state-description {
+    @apply text-gray-500 dark:text-dark-secondary mb-4;
+}
+
+.pagination-container {
+    @apply flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-dark-surface px-4 py-3 sm:px-6;
+}
+
+.pagination-info {
+    @apply flex-1 flex justify-between sm:hidden;
+}
+
+.pagination-nav {
+    @apply hidden sm:flex-1 sm:flex sm:items-center sm:justify-between;
+}
+
+.pagination-buttons {
+    @apply relative z-0 inline-flex rounded-md shadow-sm -space-x-px;
+}
+
+.pagination-button {
+    @apply relative inline-flex items-center px-2 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-surface text-sm font-medium text-gray-500 dark:text-dark-secondary hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.pagination-button:first-child {
+    @apply rounded-l-md;
+}
+
+.pagination-button:last-child {
+    @apply rounded-r-md;
+}
+
+.pagination-button.active {
+    @apply bg-primary text-white border-primary;
+}
+
+.loading-spinner {
+    @apply animate-spin rounded-full border-2 border-gray-300 border-t-primary;
+}
+
+/* Modal styles */
+.modal-overlay {
+    @apply fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50;
+}
+
+.modal-content {
+    @apply relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-dark-surface;
+}
+
+.modal-header {
+    @apply flex items-center justify-between mb-4;
+}
+
+.modal-title {
+    @apply text-lg font-medium text-gray-900 dark:text-dark-text;
+}
+
+.modal-close {
+    @apply text-gray-400 hover:text-gray-600 dark:hover:text-gray-300;
+}
+
+.modal-body {
+    @apply mb-4;
+}
+
+.modal-actions {
+    @apply flex justify-end space-x-3;
+}
+
+/* Status update form */
+.status-form {
+    @apply space-y-4;
+}
+
+.status-form-group {
+    @apply space-y-1;
+}
+
+.status-form-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-dark-text;
+}
+
+.status-form-textarea {
+    @apply block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-dark-surface text-gray-900 dark:text-dark-text focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm;
+}
+
+/* Add admin form */
+.add-admin-form {
+    @apply space-y-4;
+}
+
+.add-admin-form-group {
+    @apply space-y-1;
+}
+
+.add-admin-form-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-dark-text;
+}
+
+.add-admin-form-input {
+    @apply block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-dark-surface text-gray-900 dark:text-dark-text focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .admin-details {
+        @apply flex-col space-x-0 space-y-2;
+    }
+    
+    .admin-meta {
+        @apply flex-col space-y-2;
+    }
+    
+    .filter-grid {
+        @apply grid-cols-1;
+    }
+    
+    .action-buttons {
+        @apply flex-col space-x-0 space-y-2;
+    }
+}

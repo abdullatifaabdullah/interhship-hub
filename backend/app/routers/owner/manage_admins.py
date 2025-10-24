@@ -1,15 +1,74 @@
 """
+POST /owner/admins/create - Owner create new admin
 PATCH /owner/admins/{id}/approve - Owner approve admin
 PATCH /owner/admins/{id}/suspend - Owner suspend admin  
 PATCH /owner/admins/{id}/reject - Owner reject admin
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel, Field
 from ...schemas.owner import AdminStatusUpdateOut
 from ...core.auth import require_owner
-from ...db import fetchrow
+from ...db import fetchrow, execute
 
 router = APIRouter()
+
+
+class AdminCreateRequest(BaseModel):
+    """Schema for creating new admin user."""
+    email: str = Field(..., description="Admin email")
+    full_name: str = Field(..., description="Admin full name")
+    password: str = Field(..., description="Admin password")
+
+
+@router.post("/owner/admins/create", response_model=AdminStatusUpdateOut)
+async def create_admin(
+    admin_data: AdminCreateRequest,
+    current_user: dict = Depends(require_owner)
+):
+    """
+    Create a new admin user.
+    Only owner can create admin accounts.
+    """
+    # Check if user already exists
+    existing_user = await fetchrow(
+        "SELECT id, role FROM users WHERE email = $1",
+        admin_data.email
+    )
+    
+    if existing_user:
+        if existing_user["role"] == "admin":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="User is already an admin"
+            )
+        # Update existing user to admin
+        await execute(
+            """
+            UPDATE users 
+            SET role = 'admin', admin_status = 'active'
+            WHERE id = $1
+            """,
+            existing_user["id"]
+        )
+        return AdminStatusUpdateOut(id=existing_user["id"], admin_status="active")
+    else:
+        # Create new admin user
+        from ...core.security import hash_password
+        password_hash = hash_password(admin_data.password)
+        
+        admin_id = await execute(
+            """
+            INSERT INTO users (email, password_hash, full_name, role, admin_status)
+            VALUES ($1, $2, $3, 'admin', 'active')
+            RETURNING id
+            """,
+            admin_data.email,
+            password_hash,
+            admin_data.full_name
+        )
+        
+        return AdminStatusUpdateOut(id=admin_id, admin_status="active")
 
 
 @router.patch("/owner/admins/{admin_id}/approve", response_model=AdminStatusUpdateOut)

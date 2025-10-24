@@ -1,0 +1,192 @@
+/* Owner Dashboard Page Styles */
+
+.dashboard-container {
+    @apply space-y-6;
+}
+
+.stats-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6;
+}
+
+.stat-card {
+    @apply bg-white dark:bg-dark-surface rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6;
+}
+
+.stat-header {
+    @apply flex items-center justify-between;
+}
+
+.stat-title {
+    @apply text-sm font-medium text-gray-500 dark:text-dark-secondary;
+}
+
+.stat-icon {
+    @apply text-2xl text-primary;
+}
+
+.stat-value {
+    @apply text-3xl font-bold text-gray-900 dark:text-dark-text mt-2;
+}
+
+.stat-change {
+    @apply text-sm mt-1;
+}
+
+.stat-change.positive {
+    @apply text-green-600 dark:text-green-400;
+}
+
+.stat-change.negative {
+    @apply text-red-600 dark:text-red-400;
+}
+
+.stat-change.neutral {
+    @apply text-gray-500 dark:text-gray-400;
+}
+
+.charts-section {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-6;
+}
+
+.chart-card {
+    @apply bg-white dark:bg-dark-surface rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6;
+}
+
+.chart-header {
+    @apply flex items-center justify-between mb-4;
+}
+
+.chart-title {
+    @apply text-lg font-semibold text-gray-900 dark:text-dark-text;
+}
+
+.chart-content {
+    @apply h-64 flex items-center justify-center;
+}
+
+.recent-activity {
+    @apply bg-white dark:bg-dark-surface rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6;
+}
+
+.activity-header {
+    @apply flex items-center justify-between mb-4;
+}
+
+.activity-title {
+    @apply text-lg font-semibold text-gray-900 dark:text-dark-text;
+}
+
+.activity-list {
+    @apply space-y-3;
+}
+
+.activity-item {
+    @apply flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors;
+}
+
+.activity-icon {
+    @apply flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm;
+}
+
+.activity-icon.approval {
+    @apply bg-green-100 text-green-600 dark:bg-green-900 dark:text-green-400;
+}
+
+.activity-icon.rejection {
+    @apply bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-400;
+}
+
+.activity-icon.application {
+    @apply bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-400;
+}
+
+.activity-icon.admin {
+    @apply bg-purple-100 text-purple-600 dark:bg-purple-900 dark:text-purple-400;
+}
+
+.activity-content {
+    @apply flex-1 min-w-0;
+}
+
+.activity-text {
+    @apply text-sm text-gray-900 dark:text-dark-text;
+}
+
+.activity-time {
+    @apply text-xs text-gray-500 dark:text-dark-secondary;
+}
+
+.quick-actions {
+    @apply bg-white dark:bg-dark-surface rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6;
+}
+
+.quick-actions-header {
+    @apply flex items-center justify-between mb-4;
+}
+
+.quick-actions-title {
+    @apply text-lg font-semibold text-gray-900 dark:text-dark-text;
+}
+
+.quick-actions-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+}
+
+.quick-action-button {
+    @apply flex items-center space-x-3 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer;
+}
+
+.quick-action-icon {
+    @apply text-2xl text-primary;
+}
+
+.quick-action-content {
+    @apply flex-1;
+}
+
+.quick-action-title {
+    @apply text-sm font-medium text-gray-900 dark:text-dark-text;
+}
+
+.quick-action-description {
+    @apply text-xs text-gray-500 dark:text-dark-secondary;
+}
+
+.empty-state {
+    @apply text-center py-12;
+}
+
+.empty-state-icon {
+    @apply text-gray-400 text-4xl mb-4;
+}
+
+.empty-state-title {
+    @apply text-lg font-medium text-gray-900 dark:text-dark-text mb-2;
+}
+
+.empty-state-description {
+    @apply text-gray-500 dark:text-dark-secondary mb-4;
+}
+
+.loading-spinner {
+    @apply animate-spin rounded-full border-2 border-gray-300 border-t-primary;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .stats-grid {
+        @apply grid-cols-1;
+    }
+    
+    .charts-section {
+        @apply grid-cols-1;
+    }
+    
+    .quick-actions-grid {
+        @apply grid-cols-1;
+    }
+    
+    .activity-item {
+        @apply flex-col space-x-0 space-y-2;
+    }
+}

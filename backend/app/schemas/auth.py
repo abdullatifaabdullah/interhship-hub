@@ -28,6 +28,7 @@ class TokenResponse(BaseModel):
     refresh_token: str = Field(..., description="Refresh token")
     token_type: str = Field(default="bearer", description="Token type")
     expires_in: int = Field(..., description="Access token expiration time in seconds")
+    role: str = Field(..., description="User role")
 
 
 class UserProfile(BaseModel):

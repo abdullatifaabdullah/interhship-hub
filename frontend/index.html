@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InternHub - Internship Management Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        // Light Theme Colors
+                        primary: {
+                            DEFAULT: '#2563EB',
+                            dark: '#1D4ED8',
+                            hover: '#1E40AF'
+                        },
+                        secondary: '#6B7280',
+                        accent: '#10B981',
+                        warning: '#F59E0B',
+                        danger: '#EF4444',
+                        background: '#F9FAFB',
+                        surface: '#FFFFFF',
+                        'text-primary': '#111827',
+                        'text-secondary': '#4B5563',
+                        
+                        // Dark Theme Colors
+                        'dark-primary': '#3B82F6',
+                        'dark-primary-hover': '#1D4ED8',
+                        'dark-secondary': '#9CA3AF',
+                        'dark-accent': '#34D399',
+                        'dark-warning': '#FBBF24',
+                        'dark-danger': '#F87171',
+                        'dark-bg': '#111827',
+                        'dark-surface': '#1F2937',
+                        'dark-text': '#F9FAFB',
+                        'dark-text-secondary': '#9CA3AF'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        [x-cloak] { display: none !important; }
+        .theme-transition { transition: all 0.3s ease-in-out; }
+        .loading-spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #2563EB;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .toast {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body class="h-full bg-background dark:bg-dark-bg theme-transition" x-data="appData()">
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Loading Overlay -->
+    <div x-show="loading" x-cloak class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white dark:bg-dark-surface p-6 rounded-lg shadow-lg flex items-center space-x-3">
+            <div class="loading-spinner"></div>
+            <span class="text-gray-700 dark:text-dark-text">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div class="min-h-full">
+        <!-- Navigation Bar -->
+        <nav class="bg-white dark:bg-dark-surface shadow-sm border-b border-gray-200 dark:border-gray-700">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <!-- Logo -->
+                        <div class="flex-shrink-0 flex items-center">
+                            <i class="fas fa-graduation-cap text-primary text-2xl mr-2"></i>
+                            <span class="text-xl font-bold text-gray-900 dark:text-dark-text">InternHub</span>
+                        </div>
+                        
+                        <!-- Navigation Links -->
+                        <div class="hidden md:ml-6 md:flex md:space-x-8" x-show="isAuthenticated">
+                            <template x-if="userRole === 'student'">
+                                <div class="flex space-x-8">
+                                    <a href="#" @click="showPage('student-dashboard')" 
+                                       :class="currentPage === 'student-dashboard' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 dark:text-dark-secondary hover:text-primary'"
+                                       class="inline-flex items-center px-1 pt-1 text-sm font-medium">
+                                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                    </a>
+                                    <a href="#" @click="showPage('browse-internships')" 
+                                       :class="currentPage === 'browse-internships' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 dark:text-dark-secondary hover:text-primary'"
+                                       class="inline-flex items-center px-1 pt-1 text-sm font-medium">
+                                        <i class="fas fa-search mr-2"></i>Browse Internships
+                                    </a>
+                                    <a href="#" @click="showPage('my-applications')" 
+                                       :class="currentPage === 'my-applications' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 dark:text-dark-secondary hover:text-primary'"
+                                       class="inline-flex items-center px-1 pt-1 text-sm font-medium">
+                                        <i class="fas fa-file-alt mr-2"></i>My Applications
+                                    </a>
+                                </div>
+                            </template>
+                            
+                            <template x-if="userRole === 'admin'">
+                                <div class="flex space-x-8">
+                                    <a href="#" @click="showPage('admin-dashboard')" 
+                                       :class="currentPage === 'admin-dashboard' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 dark:text-dark-secondary hover:text-primary'"
+                                       class="inline-flex items-center px-1 pt-1 text-sm font-medium">
+                                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                    </a>
+                                    <a href="#" @click="showPage('manage-internships')" 
+                                       :class="currentPage === 'manage-internships' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 dark:text-dark-secondary hover:text-primary'"
+                                       class="inline-flex items-center px-1 pt-1 text-sm font-medium">
+                                        <i class="fas fa-briefcase mr-2"></i>Manage Internships
+                                    </a>
+                                    <a href="#" @click="showPage('admin-applications')" 
+                                       :class="currentPage === 'admin-applications' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 dark:text-dark-secondary hover:text-primary'"
+                                       class="inline-flex items-center px-1 pt-1 text-sm font-medium">
+                                        <i class="fas fa-file-alt mr-2"></i>Applications
+                                    </a>
+                                </div>
+                            </template>
+                            
+                            <template x-if="userRole === 'owner'">
+                                <div class="flex space-x-8">
+                                    <a href="#" @click="showPage('owner-dashboard')" 
+                                       :class="currentPage === 'owner-dashboard' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 dark:text-dark-secondary hover:text-primary'"
+                                       class="inline-flex items-center px-1 pt-1 text-sm font-medium">
+                                        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                                    </a>
+                                    <a href="#" @click="showPage('manage-admins')" 
+                                       :class="currentPage === 'manage-admins' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 dark:text-dark-secondary hover:text-primary'"
+                                       class="inline-flex items-center px-1 pt-1 text-sm font-medium">
+                                        <i class="fas fa-users-cog mr-2"></i>Manage Admins
+                                    </a>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Right side -->
+                    <div class="flex items-center space-x-4">
+                        <!-- Theme Toggle -->
+                        <button @click="toggleTheme()" 
+                                class="p-2 rounded-md text-gray-500 dark:text-dark-secondary hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-700">
+                            <i :class="isDark ? 'fas fa-sun' : 'fas fa-moon'"></i>
+                        </button>
+
+                        <!-- User Menu -->
+                        <div x-show="isAuthenticated" class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" 
+                                    class="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
+                                <div class="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
+                                    <span class="text-white text-sm font-medium" x-text="user?.email?.charAt(0).toUpperCase()"></span>
+                                </div>
+                                <span class="ml-2 text-gray-700 dark:text-dark-text" x-text="user?.email"></span>
+                                <i class="fas fa-chevron-down ml-1 text-gray-500"></i>
+                            </button>
+
+                            <div x-show="open" @click.away="open = false" 
+                                 class="absolute right-0 mt-2 w-48 bg-white dark:bg-dark-surface rounded-md shadow-lg py-1 z-50">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <i class="fas fa-user mr-2"></i>Profile
+                                </a>
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 dark:text-dark-text hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <i class="fas fa-cog mr-2"></i>Settings
+                                </a>
+                                <hr class="my-1 border-gray-200 dark:border-gray-600">
+                                <a href="#" @click="logout()" class="block px-4 py-2 text-sm text-danger hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Sign out
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Login Button -->
+                        <div x-show="!isAuthenticated">
+                            <button @click="showPage('login')" 
+                                    class="bg-primary hover:bg-primary-hover text-white px-4 py-2 rounded-md text-sm font-medium">
+                                Sign In
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <!-- Page Content Container -->
+            <div id="page-content">
+                <!-- Default Welcome Page -->
+                <div x-show="currentPage === 'welcome'" class="text-center py-12">
+                    <div class="max-w-3xl mx-auto">
+                        <h1 class="text-4xl font-bold text-gray-900 dark:text-dark-text mb-4">
+                            Welcome to InternHub
+                        </h1>
+                        <p class="text-xl text-gray-600 dark:text-dark-secondary mb-8">
+                            Your gateway to finding the perfect internship opportunity
+                        </p>
+                        <div class="flex justify-center space-x-4">
+                            <button @click="showPage('login')" 
+                                    class="bg-primary hover:bg-primary-hover text-white px-6 py-3 rounded-lg font-medium">
+                                Get Started
+                            </button>
+                            <button @click="showPage('browse-internships')" 
+                                    class="border border-primary text-primary hover:bg-primary hover:text-white px-6 py-3 rounded-lg font-medium">
+                                Browse Internships
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Page Content -->
+                <div id="dynamic-content"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="shared/api.js"></script>
+    <script src="shared/utils.js"></script>
+    <script src="shared/components.js"></script>
+    
+    <!-- Page Scripts -->
+    <script src="auth/login.js"></script>
+    <script src="auth/signup-student.js"></script>
+    <script src="auth/signup-admin.js"></script>
+    <script src="student/dashboard.js"></script>
+    <script src="student/browse-internships.js"></script>
+    <script src="student/applications.js"></script>
+    <script src="admin/dashboard.js"></script>
+    <script src="admin/manage-internships.js"></script>
+    <script src="admin/applications.js"></script>
+    <script src="admin/pending-requests.js"></script>
+    <script src="owner/dashboard.js"></script>
+    <script src="owner/manage-admins.js"></script>
+    <script src="owner/pending-posts.js"></script>
+
+    <!-- Main App Script -->
+    <script>
+        function appData() {
+            return {
+                // App State
+                currentPage: 'welcome',
+                isAuthenticated: false,
+                user: null,
+                userRole: null,
+                loading: false,
+                isDark: localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches),
+
+                // Initialize App
+                init() {
+                    this.applyTheme();
+                    this.checkAuth();
+                    this.loadPageContent();
+                },
+
+                // Theme Management
+                toggleTheme() {
+                    this.isDark = !this.isDark;
+                    this.applyTheme();
+                    localStorage.setItem('theme', this.isDark ? 'dark' : 'light');
+                },
+
+                applyTheme() {
+                    if (this.isDark) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                },
+
+                // Authentication
+                checkAuth() {
+                    const token = localStorage.getItem('token');
+                    const userData = localStorage.getItem('user');
+                    
+                    if (token && userData) {
+                        try {
+                            this.user = JSON.parse(userData);
+                            this.userRole = this.user.role;
+                            this.isAuthenticated = true;
+                        } catch (e) {
+                            this.logout();
+                        }
+                    }
+                },
+
+                logout() {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    this.isAuthenticated = false;
+                    this.user = null;
+                    this.userRole = null;
+                    this.currentPage = 'welcome';
+                    this.loadPageContent();
+                    this.showToast('Logged out successfully', 'success');
+                },
+
+                // Navigation
+                showPage(pageName) {
+                    this.currentPage = pageName;
+                    this.loadPageContent();
+                },
+
+                loadPageContent() {
+                    const contentDiv = document.getElementById('dynamic-content');
+                    
+                    // Clear previous content
+                    contentDiv.innerHTML = '';
+                    
+                    // Load page-specific content
+                    switch (this.currentPage) {
+                        case 'login':
+                            loadLoginPage(contentDiv);
+                            break;
+                        case 'signup-student':
+                            loadStudentSignupPage(contentDiv);
+                            break;
+                        case 'signup-admin':
+                            loadAdminSignupPage(contentDiv);
+                            break;
+                        case 'student-dashboard':
+                            loadStudentDashboard(contentDiv);
+                            break;
+                        case 'browse-internships':
+                            loadBrowseInternshipsPage(contentDiv);
+                            break;
+                        case 'my-applications':
+                            loadMyApplicationsPage(contentDiv);
+                            break;
+                        case 'admin-dashboard':
+                            loadAdminDashboard(contentDiv);
+                            break;
+                        case 'manage-internships':
+                            loadManageInternshipsPage(contentDiv);
+                            break;
+                        case 'admin-applications':
+                            loadAdminApplicationsPage(contentDiv);
+                            break;
+                        case 'owner-dashboard':
+                            loadOwnerDashboard(contentDiv);
+                            break;
+                        case 'manage-admins':
+                            loadManageAdminsPage(contentDiv);
+                            break;
+                        default:
+                            contentDiv.innerHTML = '';
+                    }
+                },
+
+                // Utility Functions
+                showToast(message, type = 'info') {
+                    showToast(message, type);
+                },
+
+                setLoading(loading) {
+                    this.loading = loading;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

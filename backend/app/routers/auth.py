@@ -98,7 +98,8 @@ async def sign_in(body: SignInRequest, request: Request):
         access_token=access_token,
         refresh_token=raw_refresh_token,
         token_type="bearer",
-        expires_in=expires_in
+        expires_in=expires_in,
+        role=user_row["role"]
     )
 
 
@@ -170,7 +171,8 @@ async def refresh_tokens(body: RefreshTokenRequest, request: Request):
         access_token=access_token,
         refresh_token=new_raw_refresh_token,
         token_type="bearer",
-        expires_in=expires_in
+        expires_in=expires_in,
+        role=refresh_record["role"]
     )
 
 

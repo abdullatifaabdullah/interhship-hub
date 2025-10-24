@@ -1,0 +1,164 @@
+/* Student Applications Page Styles */
+
+.applications-container {
+    @apply space-y-6;
+}
+
+.application-card {
+    @apply bg-white dark:bg-dark-surface rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow;
+}
+
+.application-header {
+    @apply flex items-center justify-between mb-4;
+}
+
+.application-title {
+    @apply text-lg font-semibold text-gray-900 dark:text-dark-text;
+}
+
+.application-company {
+    @apply text-sm text-primary font-medium mb-2;
+}
+
+.application-details {
+    @apply flex items-center space-x-6 text-sm text-gray-500 dark:text-dark-secondary mb-3;
+}
+
+.application-description {
+    @apply text-sm text-gray-600 dark:text-dark-secondary mb-4;
+}
+
+.application-meta {
+    @apply flex items-center justify-between text-xs text-gray-400 dark:text-gray-500;
+}
+
+.status-badge {
+    @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.status-submitted {
+    @apply bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200;
+}
+
+.status-review {
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
+}
+
+.status-interview_required {
+    @apply bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200;
+}
+
+.status-info_required {
+    @apply bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200;
+}
+
+.status-rejected {
+    @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
+}
+
+.empty-state {
+    @apply text-center py-12;
+}
+
+.empty-state-icon {
+    @apply text-gray-400 text-4xl mb-4;
+}
+
+.empty-state-title {
+    @apply text-lg font-medium text-gray-900 dark:text-dark-text mb-2;
+}
+
+.empty-state-description {
+    @apply text-gray-500 dark:text-dark-secondary mb-4;
+}
+
+.filter-section {
+    @apply bg-white dark:bg-dark-surface rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6;
+}
+
+.filter-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-4;
+}
+
+.filter-label {
+    @apply block text-sm font-medium text-gray-700 dark:text-dark-text mb-2;
+}
+
+.filter-input {
+    @apply block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-dark-surface text-gray-900 dark:text-dark-text placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm;
+}
+
+.filter-select {
+    @apply block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-surface text-gray-900 dark:text-dark-text rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm;
+}
+
+.results-header {
+    @apply flex items-center justify-between mb-4;
+}
+
+.results-count {
+    @apply text-sm text-gray-500 dark:text-dark-secondary;
+}
+
+.view-toggle {
+    @apply flex items-center space-x-2;
+}
+
+.view-button {
+    @apply p-2 rounded-md text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors;
+}
+
+.view-button.active {
+    @apply text-primary bg-primary bg-opacity-10;
+}
+
+.pagination-container {
+    @apply flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-dark-surface px-4 py-3 sm:px-6;
+}
+
+.pagination-info {
+    @apply flex-1 flex justify-between sm:hidden;
+}
+
+.pagination-nav {
+    @apply hidden sm:flex-1 sm:flex sm:items-center sm:justify-between;
+}
+
+.pagination-buttons {
+    @apply relative z-0 inline-flex rounded-md shadow-sm -space-x-px;
+}
+
+.pagination-button {
+    @apply relative inline-flex items-center px-2 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-dark-surface text-sm font-medium text-gray-500 dark:text-dark-secondary hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.pagination-button:first-child {
+    @apply rounded-l-md;
+}
+
+.pagination-button:last-child {
+    @apply rounded-r-md;
+}
+
+.pagination-button.active {
+    @apply bg-primary text-white border-primary;
+}
+
+.loading-spinner {
+    @apply animate-spin rounded-full border-2 border-gray-300 border-t-primary;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .application-details {
+        @apply flex-col space-x-0 space-y-2;
+    }
+    
+    .application-meta {
+        @apply flex-col space-y-2;
+    }
+    
+    .filter-grid {
+        @apply grid-cols-1;
+    }
+}
