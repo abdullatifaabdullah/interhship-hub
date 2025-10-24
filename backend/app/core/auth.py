@@ -288,6 +288,18 @@ async def require_student(current_user: Dict[str, Any] = Depends(get_current_use
         )
     return current_user
 
+async def require_admin_active(current_user: Dict[str, Any] = Depends(get_current_user)) -> Dict[str, Any]:
+    """Require the current user to have admin role with active status or be an owner."""
+    if current_user["role"] == "owner":
+        return current_user
+    elif current_user["role"] == "admin" and current_user["admin_status"] == "active":
+        return current_user
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Active admin access required"
+        )
+
 # Utility functions
 def now_utc() -> datetime:
     """Get current UTC datetime."""

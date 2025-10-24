@@ -6,6 +6,8 @@ This module provides:
 - POST /auth/refresh - Token refresh with rotation
 - POST /auth/sign-out - Token revocation
 - GET /me - Current user profile
+- POST /auth/sign-up-admin - Admin registration (pending approval)
+- POST /auth/sign-up-student - Student registration
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status, Request
@@ -28,7 +30,10 @@ from ..schemas.auth import (
     TokenResponse,
     UserProfile,
     SignOutRequest,
-    SignOutResponse
+    SignOutResponse,
+    SignUpAdminRequest,
+    SignUpStudentRequest,
+    SignUpResponse
 )
 from ..db import fetchrow
 
@@ -207,4 +212,96 @@ async def get_current_user_profile(current_user: dict = Depends(get_current_user
         email=current_user["email"],
         role=current_user["role"],
         admin_status=current_user.get("admin_status")
+    )
+
+
+@router.post("/sign-up-admin", response_model=SignUpResponse, status_code=status.HTTP_201_CREATED)
+async def sign_up_admin(body: SignUpAdminRequest):
+    """
+    Register a new admin user.
+    
+    Args:
+        body: Admin registration data
+    
+    Returns:
+        SignUpResponse with success message and user ID
+    
+    Raises:
+        HTTPException: If email already exists
+    """
+    # Check if email already exists
+    existing_user = await fetchrow(
+        "SELECT id FROM users WHERE email = $1",
+        body.email.lower()
+    )
+    
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already registered"
+        )
+    
+    # Hash password
+    password_hash = bcrypt.hash(body.password)
+    
+    # Create admin user with pending status
+    user = await fetchrow(
+        """
+        INSERT INTO users (email, password_hash, full_name, role, admin_status)
+        VALUES ($1, $2, $3, 'admin', 'pending')
+        RETURNING id
+        """,
+        body.email.lower(), password_hash, body.full_name
+    )
+    
+    return SignUpResponse(
+        ok=True,
+        message="Admin account created successfully. Awaiting owner approval.",
+        user_id=user["id"]
+    )
+
+
+@router.post("/sign-up-student", response_model=SignUpResponse, status_code=status.HTTP_201_CREATED)
+async def sign_up_student(body: SignUpStudentRequest):
+    """
+    Register a new student user.
+    
+    Args:
+        body: Student registration data
+    
+    Returns:
+        SignUpResponse with success message and user ID
+    
+    Raises:
+        HTTPException: If email already exists
+    """
+    # Check if email already exists
+    existing_user = await fetchrow(
+        "SELECT id FROM users WHERE email = $1",
+        body.email.lower()
+    )
+    
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already registered"
+        )
+    
+    # Hash password
+    password_hash = bcrypt.hash(body.password)
+    
+    # Create student user
+    user = await fetchrow(
+        """
+        INSERT INTO users (email, password_hash, full_name, role, admin_status)
+        VALUES ($1, $2, $3, 'student', NULL)
+        RETURNING id
+        """,
+        body.email.lower(), password_hash, body.full_name
+    )
+    
+    return SignUpResponse(
+        ok=True,
+        message="Student account created successfully.",
+        user_id=user["id"]
     )

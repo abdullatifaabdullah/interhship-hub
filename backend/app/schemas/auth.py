@@ -46,3 +46,24 @@ class SignOutRequest(BaseModel):
 class SignOutResponse(BaseModel):
     """Response schema for sign-out."""
     ok: bool = Field(default=True, description="Operation success status")
+
+
+class SignUpAdminRequest(BaseModel):
+    """Request schema for admin sign-up."""
+    email: EmailStr = Field(..., description="Admin email address")
+    password: str = Field(..., min_length=8, description="Admin password (min 8 characters)")
+    full_name: str = Field(..., min_length=2, description="Admin full name")
+
+
+class SignUpStudentRequest(BaseModel):
+    """Request schema for student sign-up."""
+    email: EmailStr = Field(..., description="Student email address")
+    password: str = Field(..., min_length=8, description="Student password (min 8 characters)")
+    full_name: str = Field(..., min_length=2, description="Student full name")
+
+
+class SignUpResponse(BaseModel):
+    """Response schema for sign-up."""
+    ok: bool = Field(default=True, description="Operation success status")
+    message: str = Field(..., description="Success message")
+    user_id: int = Field(..., description="Created user ID")
